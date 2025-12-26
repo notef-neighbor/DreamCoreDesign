@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>DreamCore - Game Platform Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7C3AED',
+            'primary-light': '#A78BFA',
+            cta: '#F43F5E',
+            'cta-hover': '#E11D48',
+            dark: '#0F0F23',
+            'dark-card': '#1A1A2E',
+            'dark-surface': '#16162A',
+            light: '#E2E8F0',
+            muted: '#94A3B8',
+            border: '#4C1D95',
+            neon: {
+              cyan: '#00FFFF',
+              magenta: '#FF00FF',
+              green: '#00FF00'
+            }
+          },
+          fontFamily: {
+            display: ['Russo One', 'sans-serif'],
+            body: ['Chakra Petch', 'sans-serif']
+          },
+          aspectRatio: {
+            'game': '9 / 16'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-family: 'Chakra Petch', sans-serif; }
+    h1, h2, h3, .font-display { font-family: 'Russo One', sans-serif; }
+
+    /* Neon glow effects */
+    .neon-glow { text-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
+    .neon-border { box-shadow: 0 0 10px rgba(124, 58, 237, 0.5), inset 0 0 10px rgba(124, 58, 237, 0.1); }
+    .neon-card { box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2); }
+
+    /* Scanline effect */
+    .scanlines::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.1) 0px,
+        rgba(0, 0, 0, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Hide scrollbar */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Screen container for mobile mockup */
+    .mobile-frame {
+      width: 375px;
+      height: 812px;
+      border-radius: 40px;
+      overflow: hidden;
+      border: 8px solid #2A2A4A;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Active nav indicator */
+    .nav-active { color: #7C3AED; }
+    .nav-active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #7C3AED;
+      box-shadow: 0 0 8px #7C3AED;
+    }
+
+    /* Snap scroll */
+    .snap-x { scroll-snap-type: x mandatory; }
+    .snap-center { scroll-snap-align: center; }
+
+    /* Glass effect */
+    .glass {
+      background: rgba(26, 26, 46, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="bg-gray-900 min-h-screen p-8">
+  <!-- Screen Navigation -->
+  <div class="max-w-7xl mx-auto mb-8">
+    <h1 class="font-display text-4xl text-primary neon-glow mb-2">DreamCore</h1>
+    <p class="text-muted mb-6">Game Platform Mockups - モバイルUI設計</p>
+    <div class="flex flex-wrap gap-2">
+      <button onclick="showScreen('home')" class="screen-btn px-4 py-2 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 transition" data-screen="home">Home</button>
+      <button onclick="showScreen('discover')" class="screen-btn px-4 py-2 rounded-lg bg-dark-card text-muted hover:bg-primary/20 transition" data-screen="discover">Discover</button>
+      <button onclick="showScreen('create')" class="screen-btn px-4 py-2 rounded-lg bg-dark-card text-muted hover:bg-primary/20 transition" data-screen="create">Create</button>
+      <button onclick="showScreen('library')" class="screen-btn px-4 py-2 rounded-lg bg-dark-card text-muted hover:bg-primary/20 transition" data-screen="library">Library</button>
+      <button onclick="showScreen('guestbook')" class="screen-btn px-4 py-2 rounded-lg bg-dark-card text-muted hover:bg-primary/20 transition" data-screen="guestbook">Guest Book</button>
+      <button onclick="showScreen('profile')" class="screen-btn px-4 py-2 rounded-lg bg-dark-card text-muted hover:bg-primary/20 transition" data-screen="profile">Profile</button>
+      <button onclick="showScreen('remixtree')" class="screen-btn px-4 py-2 rounded-lg bg-dark-card text-muted hover:bg-primary/20 transition" data-screen="remixtree">Remix Tree</button>
+    </div>
+  </div>
+
+  <!-- Mobile Frame Container -->
+  <div class="flex justify-center">
+    <div class="mobile-frame relative bg-dark">
+
+      <!-- ========== HOME SCREEN ========== -->
+      <div id="screen-home" class="screen absolute inset-0 flex flex-col">
+        <!-- Game Canvas (9:16) -->
+        <div class="flex-1 relative bg-gradient-to-br from-dark via-dark-card to-primary/20 scanlines">
+          <!-- Game Content Placeholder -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <div class="w-24 h-24 mx-auto mb-4 rounded-2xl bg-primary/20 border border-primary/40 flex items-center justify-center">
+                <svg class="w-12 h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <p class="text-muted text-sm">Game Canvas</p>
+            </div>
+          </div>
+
+          <!-- Top Panel -->
+          <div class="absolute top-0 left-0 right-0 p-4 flex items-start justify-between">
+            <!-- Back Button -->
+            <button class="w-10 h-10 rounded-full glass flex items-center justify-center text-light hover:bg-white/10 transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+
+            <!-- Interaction Toolbar (Capsule) -->
+            <div class="glass rounded-full px-2 py-2 flex items-center gap-1">
+              <button class="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center text-cta transition">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </button>
+              <button class="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center text-light transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+              </button>
+              <button class="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center text-light transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                </svg>
+              </button>
+              <button class="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center text-light transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
+              </button>
+              <button class="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center text-light transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Info Overlay (Bottom) -->
+          <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-dark via-dark/80 to-transparent">
+            <!-- Game Info -->
+            <div class="mb-3">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs text-primary font-medium">V.003</span>
+                <span class="text-xs text-muted">•</span>
+                <span class="text-xs text-muted">Puzzle</span>
+              </div>
+              <h2 class="font-display text-xl text-light mb-1">Neon Maze Runner</h2>
+              <div class="flex flex-wrap gap-1 mb-2">
+                <span class="px-2 py-0.5 text-xs rounded-full bg-primary/20 text-primary-light">#puzzle</span>
+                <span class="px-2 py-0.5 text-xs rounded-full bg-primary/20 text-primary-light">#cyberpunk</span>
+                <span class="px-2 py-0.5 text-xs rounded-full bg-primary/20 text-primary-light">#casual</span>
+              </div>
+            </div>
+
+            <!-- Creator Info -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-cta"></div>
+                <div>
+                  <p class="text-light text-sm font-medium">@cyber_dev</p>
+                  <p class="text-muted text-xs">1.2K followers</p>
+                </div>
+              </div>
+              <button class="px-4 py-1.5 rounded-full bg-primary text-light text-sm font-medium hover:bg-primary-light transition">
+                Follow
+              </button>
+            </div>
+
+            <!-- Remix Source -->
+            <div class="mt-3 p-2 rounded-lg bg-dark-card/50 border border-border/30">
+              <p class="text-xs text-muted mb-1">Remixed from</p>
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded bg-gradient-to-br from-neon-cyan to-primary"></div>
+                <span class="text-sm text-light">Original Maze</span>
+                <span class="text-xs text-muted">by @original_creator</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="h-20 bg-dark-surface border-t border-border/30 flex items-center justify-around px-2">
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <span class="text-[10px]">SCAN</span>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            <span class="text-[10px]">DECK</span>
+          </button>
+          <!-- Center Action Button -->
+          <button class="w-14 h-14 -mt-4 rounded-full bg-gradient-to-br from-primary to-cta flex items-center justify-center text-light shadow-lg neon-border">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <span class="text-[10px]">LOGS</span>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 nav-active transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+            <span class="text-[10px]">USER</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- ========== DISCOVER SCREEN ========== -->
+      <div id="screen-discover" class="screen absolute inset-0 flex flex-col hidden">
+        <!-- Header -->
+        <div class="p-4 bg-dark-surface">
+          <!-- Search Bar -->
+          <div class="relative mb-4">
+            <input type="text" placeholder="Search games, creators..." class="w-full h-12 pl-12 pr-4 rounded-xl bg-dark-card border border-border/30 text-light placeholder-muted focus:border-primary focus:outline-none transition">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          <!-- Category Filter -->
+          <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+            <button class="px-4 py-2 rounded-full bg-primary text-light text-sm whitespace-nowrap">All</button>
+            <button class="px-4 py-2 rounded-full bg-dark-card text-muted text-sm whitespace-nowrap hover:bg-primary/20 transition">Puzzle</button>
+            <button class="px-4 py-2 rounded-full bg-dark-card text-muted text-sm whitespace-nowrap hover:bg-primary/20 transition">Action</button>
+            <button class="px-4 py-2 rounded-full bg-dark-card text-muted text-sm whitespace-nowrap hover:bg-primary/20 transition">Arcade</button>
+            <button class="px-4 py-2 rounded-full bg-dark-card text-muted text-sm whitespace-nowrap hover:bg-primary/20 transition">RPG</button>
+          </div>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto no-scrollbar bg-dark">
+          <!-- Featured Carousel -->
+          <div class="p-4">
+            <h3 class="font-display text-lg text-light mb-3">Featured</h3>
+            <div class="flex gap-3 overflow-x-auto no-scrollbar snap-x pb-2">
+              <div class="w-48 flex-shrink-0 snap-center">
+                <div class="aspect-game rounded-2xl bg-gradient-to-br from-primary via-dark-card to-cta neon-card overflow-hidden relative">
+                  <div class="absolute inset-0 flex items-end p-3 bg-gradient-to-t from-dark to-transparent">
+                    <div>
+                      <p class="text-light font-medium text-sm">Cosmic Quest</p>
+                      <p class="text-muted text-xs">@astro_dev</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-48 flex-shrink-0 snap-center">
+                <div class="aspect-game rounded-2xl bg-gradient-to-br from-neon-cyan via-dark-card to-neon-magenta neon-card overflow-hidden relative">
+                  <div class="absolute inset-0 flex items-end p-3 bg-gradient-to-t from-dark to-transparent">
+                    <div>
+                      <p class="text-light font-medium text-sm">Pixel Dungeon</p>
+                      <p class="text-muted text-xs">@retro_master</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-48 flex-shrink-0 snap-center">
+                <div class="aspect-game rounded-2xl bg-gradient-to-br from-cta via-dark-card to-primary neon-card overflow-hidden relative">
+                  <div class="absolute inset-0 flex items-end p-3 bg-gradient-to-t from-dark to-transparent">
+                    <div>
+                      <p class="text-light font-medium text-sm">Speed Racer</p>
+                      <p class="text-muted text-xs">@fast_games</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rankings -->
+          <div class="p-4">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-display text-lg text-light">Top Charts</h3>
+              <div class="flex gap-2">
+                <button class="px-3 py-1 rounded-full bg-primary text-light text-xs">Daily</button>
+                <button class="px-3 py-1 rounded-full bg-dark-card text-muted text-xs">Weekly</button>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-dark-card cursor-pointer hover:bg-dark-card/80 transition">
+                <span class="text-2xl font-display text-primary w-8">1</span>
+                <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-primary to-cta"></div>
+                <div class="flex-1">
+                  <p class="text-light font-medium">Neon Maze</p>
+                  <p class="text-muted text-xs">12.5K plays</p>
+                </div>
+                <svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-dark-card cursor-pointer hover:bg-dark-card/80 transition">
+                <span class="text-2xl font-display text-primary-light w-8">2</span>
+                <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-green"></div>
+                <div class="flex-1">
+                  <p class="text-light font-medium">Space Jump</p>
+                  <p class="text-muted text-xs">9.8K plays</p>
+                </div>
+                <svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-dark-card cursor-pointer hover:bg-dark-card/80 transition">
+                <span class="text-2xl font-display text-muted w-8">3</span>
+                <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-cta to-primary"></div>
+                <div class="flex-1">
+                  <p class="text-light font-medium">Block Breaker</p>
+                  <p class="text-muted text-xs">7.2K plays</p>
+                </div>
+                <svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grid Feed -->
+          <div class="p-4">
+            <h3 class="font-display text-lg text-light mb-3">Explore</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="aspect-game rounded-xl bg-gradient-to-br from-primary/30 to-dark-card neon-card overflow-hidden relative cursor-pointer hover:scale-[1.02] transition">
+                <div class="absolute inset-0 flex items-end p-2 bg-gradient-to-t from-dark to-transparent">
+                  <p class="text-light text-xs font-medium">Cyber Run</p>
+                </div>
+              </div>
+              <div class="aspect-game rounded-xl bg-gradient-to-br from-cta/30 to-dark-card neon-card overflow-hidden relative cursor-pointer hover:scale-[1.02] transition">
+                <div class="absolute inset-0 flex items-end p-2 bg-gradient-to-t from-dark to-transparent">
+                  <p class="text-light text-xs font-medium">Puzzle Box</p>
+                </div>
+              </div>
+              <div class="aspect-game rounded-xl bg-gradient-to-br from-neon-cyan/30 to-dark-card neon-card overflow-hidden relative cursor-pointer hover:scale-[1.02] transition">
+                <div class="absolute inset-0 flex items-end p-2 bg-gradient-to-t from-dark to-transparent">
+                  <p class="text-light text-xs font-medium">Tower Defense</p>
+                </div>
+              </div>
+              <div class="aspect-game rounded-xl bg-gradient-to-br from-neon-magenta/30 to-dark-card neon-card overflow-hidden relative cursor-pointer hover:scale-[1.02] transition">
+                <div class="absolute inset-0 flex items-end p-2 bg-gradient-to-t from-dark to-transparent">
+                  <p class="text-light text-xs font-medium">Memory Game</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spacer for bottom nav -->
+          <div class="h-24"></div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="absolute bottom-0 left-0 right-0 h-20 bg-dark-surface border-t border-border/30 flex items-center justify-around px-2">
+          <button class="relative flex flex-col items-center gap-1 p-2 nav-active transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <span class="text-[10px]">SCAN</span>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            <span class="text-[10px]">DECK</span>
+          </button>
+          <button class="w-14 h-14 -mt-4 rounded-full bg-gradient-to-br from-primary to-cta flex items-center justify-center text-light shadow-lg neon-border">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <span class="text-[10px]">LOGS</span>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+            <span class="text-[10px]">USER</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- ========== CREATE SCREEN ========== -->
+      <div id="screen-create" class="screen absolute inset-0 flex flex-col hidden">
+        <!-- Header -->
+        <div class="p-4 bg-dark-surface border-b border-border/30 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <button class="w-10 h-10 rounded-full bg-dark-card flex items-center justify-center text-muted hover:text-light transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <div>
+              <h2 class="font-display text-light">New Project</h2>
+              <p class="text-xs text-muted">V.002 • Saved</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="w-10 h-10 rounded-full bg-dark-card flex items-center justify-center text-muted hover:text-light transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+            </button>
+            <button class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-light">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4 bg-dark">
+          <!-- AI Message -->
+          <div class="flex gap-3">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-neon-cyan flex-shrink-0 flex items-center justify-center">
+              <svg class="w-4 h-4 text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+            </div>
+            <div class="flex-1 space-y-2">
+              <p class="text-light text-sm">I'll help you create a puzzle game. I've generated the initial game loop with player movement.</p>
+              <!-- Code Artifact -->
+              <div class="rounded-xl bg-dark-card border border-border/30 overflow-hidden">
+                <div class="flex items-center justify-between px-3 py-2 bg-dark-surface border-b border-border/30">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs text-primary font-mono">game.js</span>
+                    <span class="px-1.5 py-0.5 text-[10px] rounded bg-neon-green/20 text-neon-green">+45</span>
+                  </div>
+                  <div class="flex gap-1">
+                    <button class="px-2 py-1 text-xs text-muted hover:text-light transition">Copy</button>
+                    <button class="px-2 py-1 text-xs text-primary hover:text-primary-light transition">Apply</button>
+                  </div>
+                </div>
+                <pre class="p-3 text-xs text-light/80 font-mono overflow-x-auto"><code>function gameLoop() {
+  ctx.clearRect(0, 0, w, h);
+  player.update();
+  player.draw(ctx);
+  requestAnimationFrame(gameLoop);
+}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Message -->
+          <div class="flex gap-3 justify-end">
+            <div class="max-w-[80%] p-3 rounded-2xl rounded-tr-sm bg-primary text-light text-sm">
+              Add a coin collection system
+            </div>
+          </div>
+
+          <!-- AI Message with Image -->
+          <div class="flex gap-3">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-neon-cyan flex-shrink-0 flex items-center justify-center">
+              <svg class="w-4 h-4 text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+            </div>
+            <div class="flex-1 space-y-2">
+              <p class="text-light text-sm">I've added the coin system. Here's a coin sprite I generated:</p>
+              <!-- Image Artifact -->
+              <div class="w-32 h-32 rounded-xl bg-dark-card border border-border/30 p-2 relative">
+                <div class="w-full h-full rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+                  <span class="text-4xl">🪙</span>
+                </div>
+                <button class="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-light shadow-lg">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Asset Deck (Collapsed) -->
+        <div class="p-2 bg-dark-surface border-t border-border/30">
+          <div class="flex gap-2 overflow-x-auto no-scrollbar">
+            <div class="w-12 h-12 rounded-lg bg-dark-card border border-border/30 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-dark-card border border-border/30 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+              </svg>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-dark-card border border-border/30 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center flex-shrink-0">
+              <span class="text-lg">🪙</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-4 bg-dark-surface border-t border-border/30">
+          <div class="flex items-end gap-2">
+            <div class="flex-1 relative">
+              <textarea rows="1" placeholder="Describe what to build..." class="w-full px-4 py-3 pr-12 rounded-2xl bg-dark-card border border-border/30 text-light placeholder-muted resize-none focus:border-primary focus:outline-none transition"></textarea>
+              <button class="absolute right-2 bottom-2 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-light">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== LIBRARY SCREEN ========== -->
+      <div id="screen-library" class="screen absolute inset-0 flex flex-col hidden">
+        <!-- Header -->
+        <div class="p-4 bg-dark-surface border-b border-border/30">
+          <h1 class="font-display text-2xl text-light mb-1">My Projects</h1>
+          <p class="text-muted text-sm">4 projects</p>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4 bg-dark">
+          <!-- New Project Button -->
+          <button class="w-full p-6 rounded-2xl border-2 border-dashed border-border/50 flex flex-col items-center justify-center gap-2 hover:border-primary/50 hover:bg-primary/5 transition cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+            </div>
+            <span class="text-primary font-medium">Initialize Project</span>
+          </button>
+
+          <!-- Project Cards -->
+          <div class="space-y-3">
+            <!-- Project 1 -->
+            <div class="flex gap-4 p-4 rounded-2xl bg-dark-card neon-card cursor-pointer hover:bg-dark-card/80 transition">
+              <div class="w-20 h-28 rounded-xl bg-gradient-to-br from-primary to-cta flex-shrink-0"></div>
+              <div class="flex-1 py-1">
+                <div class="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 class="text-light font-medium">Neon Maze Runner</h3>
+                    <p class="text-xs text-muted">Updated 2h ago</p>
+                  </div>
+                  <span class="px-2 py-0.5 text-xs rounded-full bg-neon-green/20 text-neon-green">Published</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-muted">
+                  <span>V.003</span>
+                  <span>•</span>
+                  <span>1.2K plays</span>
+                  <span>•</span>
+                  <span>45 likes</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="flex gap-4 p-4 rounded-2xl bg-dark-card cursor-pointer hover:bg-dark-card/80 transition">
+              <div class="w-20 h-28 rounded-xl bg-gradient-to-br from-neon-cyan to-primary flex-shrink-0"></div>
+              <div class="flex-1 py-1">
+                <div class="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 class="text-light font-medium">Space Invaders Clone</h3>
+                    <p class="text-xs text-muted">Updated 1d ago</p>
+                  </div>
+                  <span class="px-2 py-0.5 text-xs rounded-full bg-yellow-500/20 text-yellow-400">Draft</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-muted">
+                  <span>V.012</span>
+                  <span>•</span>
+                  <span>Not published</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="flex gap-4 p-4 rounded-2xl bg-dark-card cursor-pointer hover:bg-dark-card/80 transition">
+              <div class="w-20 h-28 rounded-xl bg-gradient-to-br from-cta to-neon-magenta flex-shrink-0"></div>
+              <div class="flex-1 py-1">
+                <div class="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 class="text-light font-medium">Puzzle Quest</h3>
+                    <p class="text-xs text-muted">Updated 3d ago</p>
+                  </div>
+                  <span class="px-2 py-0.5 text-xs rounded-full bg-neon-green/20 text-neon-green">Published</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-muted">
+                  <span>V.007</span>
+                  <span>•</span>
+                  <span>856 plays</span>
+                  <span>•</span>
+                  <span>32 likes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spacer -->
+          <div class="h-24"></div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="absolute bottom-0 left-0 right-0 h-20 bg-dark-surface border-t border-border/30 flex items-center justify-around px-2">
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <span class="text-[10px]">SCAN</span>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 nav-active transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            <span class="text-[10px]">DECK</span>
+          </button>
+          <button class="w-14 h-14 -mt-4 rounded-full bg-gradient-to-br from-primary to-cta flex items-center justify-center text-light shadow-lg neon-border">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <span class="text-[10px]">LOGS</span>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+            <span class="text-[10px]">USER</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- ========== GUEST BOOK SCREEN ========== -->
+      <div id="screen-guestbook" class="screen absolute inset-0 flex flex-col hidden">
+        <!-- Header -->
+        <div class="p-4 bg-dark-surface border-b border-border/30">
+          <div class="flex items-center gap-3">
+            <button class="w-10 h-10 rounded-full bg-dark-card flex items-center justify-center text-muted hover:text-light transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <div>
+              <h2 class="font-display text-light">Guest Book</h2>
+              <p class="text-xs text-muted">Neon Maze Runner • 128 entries</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mosaic Grid -->
+        <div class="flex-1 overflow-y-auto no-scrollbar p-3 bg-dark">
+          <div class="grid grid-cols-4 gap-2 auto-rows-min">
+            <!-- Wide Card - Visitors Bundle -->
+            <div class="col-span-2 row-span-1 p-3 rounded-xl bg-dark-card">
+              <p class="text-xs text-muted mb-2">Recent Players</p>
+              <div class="flex -space-x-2">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-cta border-2 border-dark-card"></div>
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-neon-cyan to-primary border-2 border-dark-card"></div>
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cta to-neon-magenta border-2 border-dark-card"></div>
+                <div class="w-8 h-8 rounded-full bg-dark-surface border-2 border-dark-card flex items-center justify-center text-xs text-muted">+24</div>
+              </div>
+            </div>
+
+            <!-- Small - Like -->
+            <div class="p-3 rounded-xl bg-cta/20 flex flex-col items-center justify-center">
+              <span class="text-2xl">❤️</span>
+              <span class="text-xs text-cta mt-1">45</span>
+            </div>
+
+            <!-- Small - Stamp -->
+            <div class="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+              <span class="text-3xl">🎮</span>
+            </div>
+
+            <!-- Large Card - Comment -->
+            <div class="col-span-2 row-span-2 p-4 rounded-xl bg-dark-card">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-neon-cyan to-primary"></div>
+                <span class="text-xs text-light">@gamer_pro</span>
+              </div>
+              <p class="text-sm text-light/80 mb-3">This game is amazing! The neon effects are so smooth. Can't stop playing! 🔥</p>
+              <div class="flex items-center gap-3 text-xs text-muted">
+                <button class="flex items-center gap-1 hover:text-cta transition">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                  </svg>
+                  12
+                </button>
+                <button class="hover:text-light transition">Reply</button>
+              </div>
+            </div>
+
+            <!-- Small - Stamp -->
+            <div class="p-3 rounded-xl bg-neon-green/20 flex items-center justify-center">
+              <span class="text-3xl">🚀</span>
+            </div>
+
+            <!-- Small - Stamp -->
+            <div class="p-3 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+              <span class="text-3xl">⭐</span>
+            </div>
+
+            <!-- Wide - Comment -->
+            <div class="col-span-2 p-3 rounded-xl bg-dark-card">
+              <div class="flex items-center gap-2 mb-1">
+                <div class="w-5 h-5 rounded-full bg-gradient-to-br from-cta to-primary"></div>
+                <span class="text-xs text-light">@puzzle_fan</span>
+              </div>
+              <p class="text-xs text-light/80">Level 5 is tough! 💪</p>
+            </div>
+
+            <!-- Small stamps row -->
+            <div class="p-3 rounded-xl bg-neon-cyan/20 flex items-center justify-center">
+              <span class="text-3xl">💎</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-neon-magenta/20 flex items-center justify-center">
+              <span class="text-3xl">🎯</span>
+            </div>
+
+            <!-- Wide - Follow action -->
+            <div class="col-span-2 p-3 rounded-xl bg-primary/10 border border-primary/30">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-neon-cyan"></div>
+                <div class="flex-1">
+                  <p class="text-xs text-light">@newbie_gamer</p>
+                  <p class="text-[10px] text-primary">started following</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- More stamps -->
+            <div class="p-3 rounded-xl bg-primary/20 flex items-center justify-center">
+              <span class="text-3xl">🏆</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-cta/20 flex items-center justify-center">
+              <span class="text-3xl">🔥</span>
+            </div>
+          </div>
+
+          <!-- Spacer -->
+          <div class="h-32"></div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-dark-surface border-t border-border/30">
+          <div class="flex items-center gap-2 mb-3">
+            <button class="px-3 py-1.5 rounded-full bg-dark-card text-lg hover:bg-primary/20 transition">🔥</button>
+            <button class="px-3 py-1.5 rounded-full bg-dark-card text-lg hover:bg-primary/20 transition">❤️</button>
+            <button class="px-3 py-1.5 rounded-full bg-dark-card text-lg hover:bg-primary/20 transition">🎮</button>
+            <button class="px-3 py-1.5 rounded-full bg-dark-card text-lg hover:bg-primary/20 transition">⭐</button>
+            <button class="px-3 py-1.5 rounded-full bg-dark-card text-lg hover:bg-primary/20 transition">🚀</button>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" placeholder="Leave a message..." class="flex-1 h-10 px-4 rounded-full bg-dark-card border border-border/30 text-light text-sm placeholder-muted focus:border-primary focus:outline-none transition">
+            <button class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-light">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== PROFILE SCREEN ========== -->
+      <div id="screen-profile" class="screen absolute inset-0 flex flex-col hidden">
+        <!-- Profile Header -->
+        <div class="p-6 bg-gradient-to-b from-primary/20 to-dark-surface">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-cta p-1">
+              <div class="w-full h-full rounded-full bg-dark-surface"></div>
+            </div>
+            <div class="flex-1">
+              <h1 class="font-display text-xl text-light">@cyber_dev</h1>
+              <p class="text-muted text-sm">Game Developer & Designer</p>
+            </div>
+            <button class="w-10 h-10 rounded-full bg-dark-card flex items-center justify-center text-muted hover:text-light transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Stats -->
+          <div class="flex gap-6 mb-4">
+            <div class="text-center">
+              <p class="font-display text-xl text-light">12</p>
+              <p class="text-xs text-muted">Projects</p>
+            </div>
+            <div class="text-center">
+              <p class="font-display text-xl text-light">1.2K</p>
+              <p class="text-xs text-muted">Followers</p>
+            </div>
+            <div class="text-center">
+              <p class="font-display text-xl text-light">89</p>
+              <p class="text-xs text-muted">Following</p>
+            </div>
+          </div>
+
+          <!-- Bio -->
+          <p class="text-sm text-light/80">Creating puzzle games and interactive experiences. Love cyberpunk aesthetics. 🎮✨</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="flex bg-dark-surface border-b border-border/30">
+          <button class="flex-1 py-3 text-sm text-primary border-b-2 border-primary">Projects</button>
+          <button class="flex-1 py-3 text-sm text-muted hover:text-light transition">Likes</button>
+          <button class="flex-1 py-3 text-sm text-muted hover:text-light transition">Saved</button>
+        </div>
+
+        <!-- Grid -->
+        <div class="flex-1 overflow-y-auto no-scrollbar p-3 bg-dark">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="aspect-game rounded-xl bg-gradient-to-br from-primary to-cta overflow-hidden relative cursor-pointer hover:scale-[1.02] transition">
+              <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-dark to-transparent">
+                <p class="text-light text-xs font-medium">Neon Maze</p>
+                <p class="text-muted text-[10px]">1.2K plays</p>
+              </div>
+            </div>
+            <div class="aspect-game rounded-xl bg-gradient-to-br from-neon-cyan to-primary overflow-hidden relative cursor-pointer hover:scale-[1.02] transition">
+              <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-dark to-transparent">
+                <p class="text-light text-xs font-medium">Space Jump</p>
+                <p class="text-muted text-[10px]">856 plays</p>
+              </div>
+            </div>
+            <div class="aspect-game rounded-xl bg-gradient-to-br from-cta to-neon-magenta overflow-hidden relative cursor-pointer hover:scale-[1.02] transition">
+              <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-dark to-transparent">
+                <p class="text-light text-xs font-medium">Puzzle Quest</p>
+                <p class="text-muted text-[10px]">654 plays</p>
+              </div>
+            </div>
+            <div class="aspect-game rounded-xl bg-gradient-to-br from-primary/50 to-dark-card overflow-hidden relative cursor-pointer hover:scale-[1.02] transition">
+              <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-dark to-transparent">
+                <p class="text-light text-xs font-medium">Block Builder</p>
+                <p class="text-muted text-[10px]">423 plays</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spacer -->
+          <div class="h-24"></div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="absolute bottom-0 left-0 right-0 h-20 bg-dark-surface border-t border-border/30 flex items-center justify-around px-2">
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <span class="text-[10px]">SCAN</span>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            <span class="text-[10px]">DECK</span>
+          </button>
+          <button class="w-14 h-14 -mt-4 rounded-full bg-gradient-to-br from-primary to-cta flex items-center justify-center text-light shadow-lg neon-border">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 text-muted hover:text-light transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <span class="text-[10px]">LOGS</span>
+          </button>
+          <button class="relative flex flex-col items-center gap-1 p-2 nav-active transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+            <span class="text-[10px]">USER</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- ========== REMIX TREE SCREEN ========== -->
+      <div id="screen-remixtree" class="screen absolute inset-0 flex flex-col hidden">
+        <!-- Header -->
+        <div class="p-4 bg-dark-surface border-b border-border/30">
+          <div class="flex items-center gap-3">
+            <button class="w-10 h-10 rounded-full bg-dark-card flex items-center justify-center text-muted hover:text-light transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <div>
+              <h2 class="font-display text-light">Remix Tree</h2>
+              <p class="text-xs text-muted">Neon Maze Runner lineage</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tree View -->
+        <div class="flex-1 overflow-y-auto no-scrollbar p-4 bg-dark">
+          <!-- Timeline -->
+          <div class="relative pl-8">
+            <!-- Vertical Line -->
+            <div class="absolute left-3 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary-light to-border"></div>
+
+            <!-- Original Node -->
+            <div class="relative mb-8">
+              <div class="absolute left-[-20px] w-6 h-6 rounded-full bg-primary border-4 border-dark flex items-center justify-center">
+                <div class="w-2 h-2 rounded-full bg-light"></div>
+              </div>
+              <div class="p-4 rounded-2xl bg-dark-card border border-primary/30 neon-card">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="px-2 py-0.5 text-xs rounded-full bg-primary/20 text-primary">Original</span>
+                  <span class="text-xs text-muted">V.001</span>
+                </div>
+                <h3 class="text-light font-medium mb-1">Maze Prototype</h3>
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-5 h-5 rounded-full bg-gradient-to-br from-neon-green to-primary"></div>
+                  <span class="text-xs text-muted">@original_creator</span>
+                </div>
+                <div class="flex items-center gap-3 text-xs text-muted">
+                  <span>245 plays</span>
+                  <span>•</span>
+                  <span>12 remixes</span>
+                </div>
+                <div class="mt-3 flex gap-2">
+                  <button class="flex-1 py-2 rounded-lg bg-dark-surface text-xs text-light hover:bg-primary/20 transition">Play</button>
+                  <button class="flex-1 py-2 rounded-lg bg-primary text-xs text-light hover:bg-primary-light transition">Remix</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Remix 1 -->
+            <div class="relative mb-8">
+              <div class="absolute left-[-20px] w-6 h-6 rounded-full bg-primary-light border-4 border-dark"></div>
+              <div class="p-4 rounded-2xl bg-dark-card">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="px-2 py-0.5 text-xs rounded-full bg-primary-light/20 text-primary-light">Remix</span>
+                  <span class="text-xs text-muted">V.001</span>
+                </div>
+                <h3 class="text-light font-medium mb-1">Neon Maze</h3>
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-5 h-5 rounded-full bg-gradient-to-br from-primary to-cta"></div>
+                  <span class="text-xs text-muted">@neon_dev</span>
+                </div>
+                <p class="text-xs text-muted mb-2">Added neon visual effects and new levels</p>
+                <div class="flex items-center gap-3 text-xs text-muted">
+                  <span>1.8K plays</span>
+                  <span>•</span>
+                  <span>5 remixes</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Current Version (highlighted) -->
+            <div class="relative mb-8">
+              <div class="absolute left-[-20px] w-6 h-6 rounded-full bg-cta border-4 border-dark animate-pulse"></div>
+              <div class="p-4 rounded-2xl bg-dark-card border border-cta/50">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="px-2 py-0.5 text-xs rounded-full bg-cta/20 text-cta">Current</span>
+                  <span class="text-xs text-muted">V.003</span>
+                </div>
+                <h3 class="text-light font-medium mb-1">Neon Maze Runner</h3>
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-5 h-5 rounded-full bg-gradient-to-br from-primary to-cta"></div>
+                  <span class="text-xs text-muted">@cyber_dev</span>
+                  <span class="text-xs text-neon-green">(You)</span>
+                </div>
+                <p class="text-xs text-muted mb-2">Added runner mechanics and coin system</p>
+                <div class="flex items-center gap-3 text-xs text-muted">
+                  <span>1.2K plays</span>
+                  <span>•</span>
+                  <span>2 remixes</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Child Remix -->
+            <div class="relative mb-8 ml-8">
+              <!-- Branch line -->
+              <div class="absolute left-[-28px] top-3 w-4 h-0.5 bg-border"></div>
+              <div class="absolute left-[-24px] w-4 h-4 rounded-full bg-muted border-4 border-dark"></div>
+              <div class="p-3 rounded-xl bg-dark-card/50">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-xs text-muted">Remix by</span>
+                  <div class="w-4 h-4 rounded-full bg-gradient-to-br from-neon-cyan to-primary"></div>
+                  <span class="text-xs text-light">@new_dev</span>
+                </div>
+                <p class="text-xs text-muted">Neon Maze Extreme • 156 plays</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function showScreen(screenId) {
+      // Hide all screens
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.add('hidden');
+      });
+      // Show selected screen
+      document.getElementById('screen-' + screenId).classList.remove('hidden');
+
+      // Update button styles
+      document.querySelectorAll('.screen-btn').forEach(btn => {
+        if (btn.dataset.screen === screenId) {
+          btn.classList.remove('bg-dark-card', 'text-muted');
+          btn.classList.add('bg-primary/20', 'text-primary');
+        } else {
+          btn.classList.add('bg-dark-card', 'text-muted');
+          btn.classList.remove('bg-primary/20', 'text-primary');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
